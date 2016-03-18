@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size">24sp</dimen>
+    <dimen name="field_padding_side">2dp</dimen>
+    <dimen name="row_margin_bottom">30dp</dimen>
+    <dimen name="device_inset_padding">10dp</dimen>
+</resources>
