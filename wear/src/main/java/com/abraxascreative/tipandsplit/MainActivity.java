@@ -1,13 +1,44 @@
 package com.abraxascreative.tipandsplit;
 
 import android.app.Activity;
+import android.gesture.GestureOverlayView;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+import com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger;
 
-    private TextView mTextView;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+
+public class MainActivity extends Activity {
+    private RemotelyScrollableInteger billDollarsView, billCentsView, tipPercentView, numSplittingView;
+    private TextView tipAmountView, totalPerPersonView;
+    private GestureOverlayView gestureOverlayView;
+
+    private GestureDetector gestureDetector;
+
+    private DinnerCheck dinnerCheck;
+
+    private SimpleOnGestureListener simpleOnGestureListener = new SimpleOnGestureListener() {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            View focusedView = MainActivity.this.getCurrentFocus();
+            if (focusedView instanceof RemotelyScrollableInteger) {
+                ((RemotelyScrollableInteger) focusedView).scroll(distanceY);
+            }
+            return true;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,8 +48,115 @@ public class MainActivity extends Activity {
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                mTextView = (TextView) stub.findViewById(R.id.text);
+                billDollarsView = (RemotelyScrollableInteger) stub.findViewById(R.id.bill_dollars);
+                billCentsView = (RemotelyScrollableInteger) stub.findViewById(R.id.bill_cents);
+                tipPercentView = (RemotelyScrollableInteger) stub.findViewById(R.id.tip_percent);
+                numSplittingView = (RemotelyScrollableInteger) stub.findViewById(R.id.num_splitting);
+                tipAmountView = (TextView) stub.findViewById(R.id.tip_amount);
+                totalPerPersonView = (TextView) stub.findViewById(R.id.total_per_person);
+                gestureOverlayView = (GestureOverlayView) stub.findViewById(R.id.scroll_area);
+
+                // Initialize dinnerCheck, now that the view references are set and can provide their int values
+                dinnerCheck = new DinnerCheck();
+
+                setUpListeners();
             }
         });
+    }
+
+    private void setUpListeners(){
+        gestureDetector = new GestureDetector(MainActivity.this, simpleOnGestureListener);
+        gestureOverlayView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
+
+        billDollarsView.setOnIntValueChangeListener(new RemotelyScrollableInteger.OnIntValueChangeListener() {
+            @Override
+            public void onIntValueChange(int newValue) {
+                dinnerCheck.setBillDollars(newValue);
+            }
+        });
+        billCentsView.setOnIntValueChangeListener(new RemotelyScrollableInteger.OnIntValueChangeListener() {
+            @Override
+            public void onIntValueChange(int newValue) {
+                dinnerCheck.setBillCents(newValue);
+            }
+        });
+        tipPercentView.setOnIntValueChangeListener(new RemotelyScrollableInteger.OnIntValueChangeListener() {
+            @Override
+            public void onIntValueChange(int newValue) {
+                dinnerCheck.setTipPercent(newValue);
+            }
+        });
+        numSplittingView.setOnIntValueChangeListener(new RemotelyScrollableInteger.OnIntValueChangeListener() {
+            @Override
+            public void onIntValueChange(int newValue) {
+                dinnerCheck.setNumSplitting(newValue);
+            }
+        });
+    }
+
+
+    private class DinnerCheck {
+        private int billDollars, billCents, tipPercent, numSplitting;
+        private double billAmount, tipAmount, totalPerPerson;
+        private NumberFormat formatter;
+
+        public DinnerCheck() {
+            formatter = NumberFormat.getNumberInstance();
+            formatter.setMinimumIntegerDigits(1);
+            formatter.setMinimumFractionDigits(2);
+            formatter.setMaximumFractionDigits(2);
+            formatter.setRoundingMode(RoundingMode.HALF_UP);
+
+            billDollars = billDollarsView.getCurrentIntValue();
+            billCents = billCentsView.getCurrentIntValue();
+            tipPercent = tipPercentView.getCurrentIntValue();
+            numSplitting = numSplittingView.getCurrentIntValue();
+
+            updateBillAmount();
+        }
+
+        public void setBillCents(int billCents) {
+            this.billCents = billCents;
+            updateBillAmount();
+        }
+
+        public void setBillDollars(int billDollars) {
+            this.billDollars = billDollars;
+            updateBillAmount();
+        }
+
+        public void setTipPercent(int tipPercent) {
+            this.tipPercent = tipPercent;
+            updateTipAmount();
+        }
+
+        public void setNumSplitting(int numSplitting) {
+            this.numSplitting = numSplitting;
+            updateTotalPerPerson();
+        }
+
+        private void updateBillAmount() {
+            billAmount = (double)billDollars + (double)billCents * 0.01d;
+            updateTipAmount();
+            updateTotalPerPerson();
+        }
+
+        private void updateTipAmount() {
+            tipAmount = billAmount * (double)tipPercent * 0.01d;
+            updateTotalPerPerson();
+            tipAmountView.setText(formatter.format(tipAmount));
+        }
+
+        private void updateTotalPerPerson() {
+            totalPerPerson = (billAmount + tipAmount) / (double)numSplitting;
+            totalPerPersonView.setText(formatter.format(totalPerPerson));
+        }
+
+//        private static as
     }
 }
