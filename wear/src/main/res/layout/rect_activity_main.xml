@@ -6,7 +6,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context="com.abraxascreative.tipandsplit.MainActivity"
-                tools:deviceIds="wear_square">
+                tools:deviceIds="wear_square"
+                android:background="@drawable/background">
 
     <android.gesture.GestureOverlayView
         android:layout_width="75dp"
@@ -27,16 +28,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginBottom="@dimen/row_margin_bottom"
-            android:gravity="right"
-            android:orientation="horizontal">
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal"
+            >
 
             <TextView
                 android:id="@+id/bill_currency_symbol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="center_vertical"
                 android:text="$"
-                android:textSize="@dimen/text_size"/>
+                android:textSize="@dimen/symbol_size"
+                />
 
             <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
                 android:id="@+id/bill_dollars"
@@ -44,12 +47,13 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/field_padding_side"
                 android:paddingRight="@dimen/field_padding_side"
-                android:textColor="@color/selected_text_color"
                 android:textSize="@dimen/text_size"
                 custom:doesRoundRobin="true"
                 custom:initialValue="10"
                 custom:maxValue="999"
-                custom:minValue="0"/>
+                custom:minValue="0"
+                android:background="@drawable/rsi_background"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,13 +66,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/field_padding_side"
-                android:textColor="@color/selected_text_color"
                 android:textSize="@dimen/text_size"
                 custom:doesRoundRobin="true"
                 custom:formatString="%02d"
                 custom:initialValue="0"
                 custom:maxValue="99"
-                custom:minValue="0"/>
+                custom:minValue="0"
+                android:paddingRight="@dimen/field_padding_side"
+                android:background="@drawable/rsi_background"/>
 
         </LinearLayout>
 
@@ -98,17 +103,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingRight="@dimen/field_padding_side"
-                        android:textColor="@color/selected_text_color"
                         android:textSize="@dimen/text_size"
                         custom:initialValue="15"
                         custom:maxValue="50"
-                        custom:minValue="1"/>
+                        custom:minValue="1"
+                        android:background="@drawable/rsi_background"
+                        android:paddingLeft="@dimen/field_padding_side"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="%"
-                        android:textSize="@dimen/text_size"/>
+                        android:textSize="@dimen/symbol_size"
+                        android:layout_gravity="center_vertical"/>
 
                 </LinearLayout>
 
@@ -127,7 +134,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="$"
-                        android:textSize="@dimen/text_size"/>
+                        android:textSize="@dimen/symbol_size"
+                        android:layout_gravity="center_vertical"/>
 
                     <TextView
                         android:id="@+id/tip_amount"
@@ -143,7 +151,8 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
-                android:background="@android:color/holo_blue_light">
+                android:background="#d7ccc8"
+                android:layout_marginTop="4dp">
             </FrameLayout>
 
         </LinearLayout>
@@ -165,18 +174,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="÷"
-                    android:textSize="@dimen/text_size"/>
+                    android:textSize="@dimen/symbol_size"
+                    android:layout_gravity="center_vertical"/>
 
                 <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
                     android:id="@+id/num_splitting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/field_padding_side"
-                    android:textColor="@color/selected_text_color"
                     android:textSize="@dimen/text_size"
                     custom:initialValue="1"
                     custom:maxValue="9"
-                    custom:minValue="1"/>
+                    custom:minValue="1"
+                    android:background="@drawable/rsi_background"
+                    android:paddingRight="@dimen/field_padding_side"/>
 
             </LinearLayout>
 
@@ -193,7 +204,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$"
-                    android:textSize="@dimen/text_size"/>
+                    android:textSize="@dimen/symbol_size"
+                    android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:id="@+id/total_per_person"
