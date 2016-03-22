@@ -1,9 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:background="@drawable/background"
                 tools:context="com.abraxascreative.tipandsplit.MainActivity"
                 tools:deviceIds="wear_round">
+
+    <android.gesture.GestureOverlayView
+        android:id="@+id/scroll_area"
+        android:layout_width="90dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true">
+    </android.gesture.GestureOverlayView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/device_inset_padding">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/bill_currency_symbol"
+                style="@style/symbol"
+                android:text="$"/>
+
+            <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
+                android:id="@+id/bill_dollars"
+                style="@style/rsi"
+                custom:doesRoundRobin="true"
+                custom:initialValue="10"
+                custom:maxValue="999"
+                custom:minValue="0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="."
+                android:textSize="@dimen/text_size"/>
+
+            <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
+                android:id="@+id/bill_cents"
+                style="@style/rsi"
+                custom:doesRoundRobin="true"
+                custom:formatString="%02d"
+                custom:initialValue="0"
+                custom:maxValue="99"
+                custom:minValue="0"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="5dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="false"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:orientation="horizontal">
+
+                    <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
+                        android:id="@+id/tip_percent"
+                        style="@style/rsi"
+                        custom:initialValue="15"
+                        custom:maxValue="50"
+                        custom:minValue="1"/>
+
+                    <TextView
+                        style="@style/symbol"
+                        android:text="%"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tip_currency_symbol"
+                        style="@style/symbol"
+                        android:text="$"/>
+
+                    <TextView
+                        android:id="@+id/tip_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="172.50"
+                        android:textSize="@dimen/text_size"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginTop="4dp"
+                android:background="#c3c5c9">
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/symbol"
+                    android:text="÷"/>
+
+                <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
+                    android:id="@+id/num_splitting"
+                    style="@style/rsi"
+                    custom:initialValue="1"
+                    custom:maxValue="9"
+                    custom:minValue="1"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/total_currency_symbol"
+                    style="@style/symbol"
+                    android:text="$"/>
+
+                <TextView
+                    android:id="@+id/total_per_person"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="680.00"
+                    android:textSize="@dimen/text_size"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

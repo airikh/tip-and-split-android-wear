@@ -10,14 +10,13 @@
                 android:background="@drawable/background">
 
     <android.gesture.GestureOverlayView
-        android:layout_width="75dp"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
         android:id="@+id/scroll_area"
-        android:layout_alignParentEnd="true"
-        >
+        android:layout_alignParentEnd="true">
     </android.gesture.GestureOverlayView>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -26,11 +25,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginBottom="@dimen/row_margin_bottom"
-            android:gravity="center_vertical|right"
             android:orientation="horizontal"
-            >
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true">
 
             <TextView
                 android:id="@+id/bill_currency_symbol"
@@ -65,8 +62,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/row_margin_bottom"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_centerInParent="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,7 +131,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -181,6 +179,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
