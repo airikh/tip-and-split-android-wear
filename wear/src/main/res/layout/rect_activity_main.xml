@@ -13,7 +13,8 @@
         android:layout_width="80dp"
         android:layout_height="match_parent"
         android:id="@+id/scroll_area"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:gestureColor="@color/gesture_color">
     </android.gesture.GestureOverlayView>
 
     <RelativeLayout
