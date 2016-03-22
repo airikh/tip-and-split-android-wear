@@ -1,6 +1,8 @@
 package com.abraxascreative.tipandsplit;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.gesture.GestureOverlayView;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
@@ -19,6 +21,8 @@ public class MainActivity extends Activity {
     private RemotelyScrollableInteger billDollarsView, billCentsView, tipPercentView, numSplittingView;
     private TextView tipAmountView, totalPerPersonView;
     private GestureOverlayView gestureOverlayView;
+
+    private SharedPreferences sharedPreferences;
 
     private GestureDetector gestureDetector;
 
@@ -43,7 +47,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
@@ -55,6 +63,14 @@ public class MainActivity extends Activity {
                 tipAmountView = (TextView) stub.findViewById(R.id.tip_amount);
                 totalPerPersonView = (TextView) stub.findViewById(R.id.total_per_person);
                 gestureOverlayView = (GestureOverlayView) stub.findViewById(R.id.scroll_area);
+
+                // Initialize with stored values; use current value (as set by initalValue attribute) as the default
+                billDollarsView.setIntValue(sharedPreferences.getInt(getString(R.string.saved_bill_dollars),
+                                                                     billDollarsView.getCurrentIntValue()));
+                billCentsView.setIntValue(sharedPreferences.getInt(getString(R.string.saved_bill_cents),
+                                                                   billCentsView.getCurrentIntValue()));
+                tipPercentView.setIntValue(sharedPreferences.getInt(getString(R.string.saved_tip_percent),
+                                                                    tipPercentView.getCurrentIntValue()));
 
                 // Initialize dinnerCheck, now that the view references are set and can provide their int values
                 dinnerCheck = new DinnerCheck();
@@ -98,6 +114,19 @@ public class MainActivity extends Activity {
             }
         });
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Store user's current values (to restore on relaunch)
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(getString(R.string.saved_bill_dollars), billDollarsView.getCurrentIntValue());
+        editor.putInt(getString(R.string.saved_bill_cents), billCentsView.getCurrentIntValue());
+        editor.putInt(getString(R.string.saved_tip_percent), tipPercentView.getCurrentIntValue());
+        editor.commit();
+    }
+
 
     private class DinnerCheck {
         private int billDollars, billCents, tipPercent, numSplitting;
