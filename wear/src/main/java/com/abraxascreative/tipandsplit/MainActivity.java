@@ -99,7 +99,6 @@ public class MainActivity extends Activity {
         });
     }
 
-
     private class DinnerCheck {
         private int billDollars, billCents, tipPercent, numSplitting;
         private double billAmount, tipAmount, totalPerPerson;
@@ -156,7 +155,6 @@ public class MainActivity extends Activity {
             totalPerPerson = (billAmount + tipAmount) / (double)numSplitting;
             totalPerPersonView.setText(formatter.format(totalPerPerson));
         }
-
-//        private static as
     }
+
 }

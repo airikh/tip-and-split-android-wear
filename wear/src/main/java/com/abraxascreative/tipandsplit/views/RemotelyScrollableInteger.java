@@ -101,4 +101,5 @@ public class RemotelyScrollableInteger extends TextView {
         float newValue = currentFloatValue + distanceY * scrollFactor;
         setCurrentFloatValue(newValue);
     }
+
 }
