@@ -34,26 +34,16 @@
 
             <TextView
                 android:id="@+id/bill_currency_symbol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:text="$"
-                android:textSize="@dimen/symbol_size"
-                />
+                style="@style/symbol"/>
 
             <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
                 android:id="@+id/bill_dollars"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/field_padding_side"
-                android:paddingRight="@dimen/field_padding_side"
-                android:textSize="@dimen/text_size"
                 custom:doesRoundRobin="true"
                 custom:initialValue="10"
                 custom:maxValue="999"
                 custom:minValue="0"
-                android:background="@drawable/rsi_background"
-                />
+                style="@style/rsi"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,17 +53,12 @@
 
             <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
                 android:id="@+id/bill_cents"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/field_padding_side"
-                android:textSize="@dimen/text_size"
                 custom:doesRoundRobin="true"
                 custom:formatString="%02d"
                 custom:initialValue="0"
                 custom:maxValue="99"
                 custom:minValue="0"
-                android:paddingRight="@dimen/field_padding_side"
-                android:background="@drawable/rsi_background"/>
+                style="@style/rsi"/>
 
         </LinearLayout>
 
@@ -100,22 +85,14 @@
 
                     <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
                         android:id="@+id/tip_percent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="@dimen/field_padding_side"
-                        android:textSize="@dimen/text_size"
                         custom:initialValue="15"
                         custom:maxValue="50"
                         custom:minValue="1"
-                        android:background="@drawable/rsi_background"
-                        android:paddingLeft="@dimen/field_padding_side"/>
+                        style="@style/rsi"/>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="%"
-                        android:textSize="@dimen/symbol_size"
-                        android:layout_gravity="center_vertical"/>
+                        style="@style/symbol"/>
 
                 </LinearLayout>
 
@@ -131,11 +108,8 @@
 
                     <TextView
                         android:id="@+id/tip_currency_symbol"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="$"
-                        android:textSize="@dimen/symbol_size"
-                        android:layout_gravity="center_vertical"/>
+                        style="@style/symbol"/>
 
                     <TextView
                         android:id="@+id/tip_amount"
@@ -151,7 +125,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
-                android:background="#d7ccc8"
+                android:background="#c3c5c9"
                 android:layout_marginTop="4dp">
             </FrameLayout>
 
@@ -171,23 +145,15 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="÷"
-                    android:textSize="@dimen/symbol_size"
-                    android:layout_gravity="center_vertical"/>
+                    style="@style/symbol"/>
 
                 <com.abraxascreative.tipandsplit.views.RemotelyScrollableInteger
                     android:id="@+id/num_splitting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/field_padding_side"
-                    android:textSize="@dimen/text_size"
                     custom:initialValue="1"
                     custom:maxValue="9"
                     custom:minValue="1"
-                    android:background="@drawable/rsi_background"
-                    android:paddingRight="@dimen/field_padding_side"/>
+                    style="@style/rsi"/>
 
             </LinearLayout>
 
@@ -201,11 +167,8 @@
 
                 <TextView
                     android:id="@+id/total_currency_symbol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="$"
-                    android:textSize="@dimen/symbol_size"
-                    android:layout_gravity="center_vertical"/>
+                    style="@style/symbol"/>
 
                 <TextView
                     android:id="@+id/total_per_person"

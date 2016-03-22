@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="rsi">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/field_padding_side</item>
+        <item name="android:paddingRight">@dimen/field_padding_side</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:background">@drawable/rsi_background</item>
+    </style>
+
+    <style name="symbol">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/symbol_size</item>
+    </style>
+</resources>
