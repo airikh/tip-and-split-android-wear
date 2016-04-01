@@ -1,8 +1,10 @@
 package com.abraxascreative.tipandsplit.views;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.widget.Scroller;
 import android.widget.TextView;
 
 import com.abraxascreative.tipandsplit.R;
@@ -13,11 +15,16 @@ public class RemotelyScrollableInteger extends TextView {
     private int maxValue;
     private boolean doesRoundRobin;
     private String formatString;
-    private float scrollFactor;
 
-    private OnIntValueChangeListener onIntValueChangeListener;
+    private static final float SCROLL_FACTOR = 0.006f;  // These two values were determined through user testing
+    private static final float FLING_FACTOR = 0.05f;
 
     private float currentFloatValue;  // Keeps track of scroll position, which maps to integer via Math.round
+
+    private Scroller scroller;
+    private ValueAnimator valueAnimator;
+
+    private OnIntValueChangeListener onIntValueChangeListener;
 
     public RemotelyScrollableInteger(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -29,7 +36,6 @@ public class RemotelyScrollableInteger extends TextView {
             minValue = a.getInt(R.styleable.RemotelyScrollableInteger_minValue, 0);
             maxValue = a.getInt(R.styleable.RemotelyScrollableInteger_maxValue, 0);
             doesRoundRobin = a.getBoolean(R.styleable.RemotelyScrollableInteger_doesRoundRobin, false);
-            scrollFactor = a.getFloat(R.styleable.RemotelyScrollableInteger_scrollFactor, 0.05f);
 
             formatString = a.getString(R.styleable.RemotelyScrollableInteger_formatString);  // null if undefined
             formatString = formatString == null ? "%d" : formatString;  // Set default if attribute was not defined
@@ -46,8 +52,26 @@ public class RemotelyScrollableInteger extends TextView {
         setFocusable(true);
         setFocusableInTouchMode(true);
         // Initialize the float value using the initialValue integer
-        setCurrentFloatValue((float) initialValue, true); // Force update/redraw, in case initialValue == 0
+        setCurrentFloatValue((float) initialValue, true);  // Force update/redraw, in case initialValue == 0
+
+        scroller = new Scroller(getContext());
+
+        valueAnimator = ValueAnimator.ofFloat(0, 1);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (!scroller.isFinished()) {
+                    scroller.computeScrollOffset();
+                    setIntValue(scroller.getCurrY());
+                } else {
+                    valueAnimator.cancel();
+                    snapToInt();
+                }
+            }
+        });
     }
+
+
 
     public interface OnIntValueChangeListener {
         void onIntValueChange(int newValue);
@@ -73,6 +97,10 @@ public class RemotelyScrollableInteger extends TextView {
         setText(getDisplayText());
     }
 
+    public void snapToInt() {
+        setCurrentFloatValue(getCurrentIntValue());
+    }
+
     private void setCurrentFloatValue(float newValue) {
         setCurrentFloatValue(newValue, false);
     }
@@ -89,6 +117,7 @@ public class RemotelyScrollableInteger extends TextView {
         int roundedDiff = Math.abs(Math.round(currentFloatValue) - Math.round(newValue));
         currentFloatValue = newValue;
         if (roundedDiff >= 1 || forceUpdate) {
+            snapToInt();  // Prevents number from changing over half the scrolling distance if user reverses direction
             updateText();
             // Also call the listener, if one was set
             if (onIntValueChangeListener != null) {
@@ -98,8 +127,17 @@ public class RemotelyScrollableInteger extends TextView {
     }
 
     public void scroll(float distanceY) {
-        float newValue = currentFloatValue + distanceY * scrollFactor;
+        float scaledDistanceY = SCROLL_FACTOR * distanceY;
+        float newValue = currentFloatValue + scaledDistanceY;
         setCurrentFloatValue(newValue);
+    }
+
+    public void fling(float velocityY) {
+        int scaledVelocityY = -1 * (int)(FLING_FACTOR * velocityY);  // Multiply by -1 to reverse natural scrolling
+        scroller.fling(0, getCurrentIntValue(), 0, scaledVelocityY, 0, 0, minValue, maxValue);
+
+        valueAnimator.setDuration(scroller.getDuration());
+        valueAnimator.start();
     }
 
 }

@@ -18,7 +18,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 
 public class MainActivity extends Activity {
-    private RemotelyScrollableInteger billDollarsView, billCentsView, tipPercentView, numSplittingView;
+    private RemotelyScrollableInteger billDollarsView, billCentsView, tipPercentView, numSplittingView;  // (aka RSI's)
     private TextView tipAmountView, totalPerPersonView;
     private GestureOverlayView gestureOverlayView;
 
@@ -29,17 +29,29 @@ public class MainActivity extends Activity {
     private DinnerCheck dinnerCheck;
 
     private SimpleOnGestureListener simpleOnGestureListener = new SimpleOnGestureListener() {
+        private RemotelyScrollableInteger focusedRSI;
+
         @Override
         public boolean onDown(MotionEvent e) {
-            return true;
+            // Continue listening to gesture if currently focused view is one of the RemotelyScrollableInteger's
+            View focusedView = MainActivity.this.getCurrentFocus();
+            if (focusedView instanceof RemotelyScrollableInteger) {
+                focusedRSI = (RemotelyScrollableInteger) focusedView;  // Set for use in onScroll and onFling callbacks
+                return true;
+            } else {
+                return false;
+            }
         }
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            View focusedView = MainActivity.this.getCurrentFocus();
-            if (focusedView instanceof RemotelyScrollableInteger) {
-                ((RemotelyScrollableInteger) focusedView).scroll(distanceY);
-            }
+            focusedRSI.scroll(distanceY);
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            focusedRSI.fling(velocityY);
             return true;
         }
     };
@@ -64,7 +76,7 @@ public class MainActivity extends Activity {
                 totalPerPersonView = (TextView) stub.findViewById(R.id.total_per_person);
                 gestureOverlayView = (GestureOverlayView) stub.findViewById(R.id.scroll_area);
 
-                // Initialize with stored values; use current value (as set by initalValue attribute) as the default
+                // Initialize with stored values; use current value (as set by RSI initialValue attribute) as default
                 billDollarsView.setIntValue(sharedPreferences.getInt(getString(R.string.saved_bill_dollars),
                                                                      billDollarsView.getCurrentIntValue()));
                 billCentsView.setIntValue(sharedPreferences.getInt(getString(R.string.saved_bill_cents),
@@ -85,7 +97,17 @@ public class MainActivity extends Activity {
         gestureOverlayView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
+                boolean result = gestureDetector.onTouchEvent(event);
+                if (!result) {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        View focusedView = MainActivity.this.getCurrentFocus();
+                        if (focusedView instanceof RemotelyScrollableInteger) {
+                            ((RemotelyScrollableInteger) focusedView).snapToInt();  // Ensures consistent scroll dist.
+                            result = true;
+                        }
+                    }
+                }
+                return result;
             }
         });
 
